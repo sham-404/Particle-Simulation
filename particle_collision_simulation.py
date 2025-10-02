@@ -14,7 +14,12 @@ class Particle:
         self.velocity *= random.uniform(2, 6)
         self.acceleration = pygame.math.Vector2(0, 0)
         self.mass = random.uniform(1, 5)
-        self.radius = math.sqrt(self.mass) * 20
+        self.radius = math.sqrt(self.mass) * 5
+        self.color = (
+            random.randint(50, 255),
+            random.randint(50, 255),
+            random.randint(50, 255),
+        )
 
     def edge_collision(self, screen):
         width = screen.get_width()
@@ -36,13 +41,18 @@ class Particle:
 
     def collision(self, other):
         impact = self.position - other.position
-        if impact.length() <= self.radius + other.radius:
-            den = impact.length_squared() * (self.mass + other.mass)
+        dist = impact.length()
 
+        if impact.length() <= self.radius + other.radius:
+            overlap = (self.radius + other.radius) - dist
+            correction = impact.normalize() * (overlap / 2)
+            self.position += correction
+            other.position -= correction
+
+            den = impact.length_squared() * (self.mass + other.mass)
             num = (other.velocity - self.velocity).dot(impact) * impact
 
             self.velocity += (2 * other.mass) * num / den
-
             other.velocity += (2 * self.mass) * -num / den
 
     def update(self):
@@ -51,10 +61,10 @@ class Particle:
     def show(self, screen):
         pygame.draw.circle(
             surface=screen,
-            color=(70, 70, 70),
+            color=self.color,
             center=self.position,
             radius=self.radius,
-            width=3,
+            width=2,
         )
 
 
@@ -64,13 +74,13 @@ def main():
     running = True
 
     particle = []
-    no_of_particle = 50
+    no_of_particle = 300
 
     for i in range(no_of_particle):
         particle.append(
             Particle(
                 random.uniform(0, WIDTH),
-                random.uniform(0, HEIGHT),
+                random.uniform(0, 5),
             )
         )
 
@@ -79,7 +89,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
-        screen.fill((225, 225, 225))
+        screen.fill((0, 0, 0))
 
         for i in range(no_of_particle):
             particle[i].show(screen)
