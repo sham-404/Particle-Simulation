@@ -2,24 +2,40 @@ import pygame, random, math
 
 WIDTH = 1200
 HEIGHT = 600
-FPS = 60
+FPS = 30
 
 
 class Particle:
-    def __init__(self, x, y):
+    def __init__(
+        self, x, y, mass=None, radius=None, velocity=None, color=None, width=2
+    ):
+        if mass is None:
+            mass = random.uniform(1, 10)
+
+        if radius is None:
+            radius = int(math.sqrt(mass) * 5)
+
+        if color is None:
+            color = (
+                random.randint(50, 255),
+                random.randint(50, 255),
+                random.randint(50, 255),
+            )
+
         self.position = pygame.math.Vector2(x, y)
         self.velocity = pygame.math.Vector2(1, 0).rotate_rad(
             random.uniform(0, math.tau)
         )
-        self.velocity *= random.uniform(2, 6)
+
+        if velocity is None:
+            velocity = random.uniform(2, 6)
+
+        self.velocity *= velocity
         self.acceleration = pygame.math.Vector2(0, 0)
-        self.mass = random.uniform(1, 5)
-        self.radius = math.sqrt(self.mass) * 5
-        self.color = (
-            random.randint(50, 255),
-            random.randint(50, 255),
-            random.randint(50, 255),
-        )
+        self.mass = mass
+        self.radius = radius
+        self.color = color
+        self.width = width
 
     def edge_collision(self, screen):
         width = screen.get_width()
@@ -64,7 +80,7 @@ class Particle:
             color=self.color,
             center=self.position,
             radius=self.radius,
-            width=2,
+            width=self.width,
         )
 
 
@@ -74,13 +90,25 @@ def main():
     running = True
 
     particle = []
-    no_of_particle = 300
+    no_of_particle = 99
 
-    for i in range(no_of_particle):
+    for i in range(no_of_particle - 33):
         particle.append(
             Particle(
                 random.uniform(0, WIDTH),
-                random.uniform(0, 5),
+                random.uniform(0, HEIGHT),
+                mass=random.randint(11, 25),
+                width=2,
+            )
+        )
+
+    for i in range(no_of_particle - 33):
+        particle.append(
+            Particle(
+                random.uniform(0, WIDTH),
+                random.uniform(0, HEIGHT),
+                mass=random.randint(2, 4),
+                width=0,
             )
         )
 
