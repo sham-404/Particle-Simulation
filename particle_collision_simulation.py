@@ -1,7 +1,11 @@
+# I have used pygame-ce, so if you want to use it on normal pygame,
+# change the anti aliased circle (pygame.draw.aacircle()) to
+# normal circle (pygame.draw.circle()) in the show() of Particle class
+
 import pygame, random, math
 
 WIDTH = 1200
-HEIGHT = 600
+HEIGHT = 550
 FPS = 30
 
 
@@ -37,22 +41,19 @@ class Particle:
         self.color = color
         self.width = width
 
-    def edge_collision(self, screen):
-        width = screen.get_width()
-        height = screen.get_height()
-
+    def edge_collision(self):
         if self.position.x < self.radius:
             self.position.x = self.radius
             self.velocity.x *= -1
-        elif self.position.x > width - self.radius:
-            self.position.x = width - self.radius
+        elif self.position.x > WIDTH - self.radius:
+            self.position.x = WIDTH - self.radius
             self.velocity.x *= -1
 
         if self.position.y < self.radius:
             self.position.y = self.radius
             self.velocity.y *= -1
-        elif self.position.y > height - self.radius:
-            self.position.y = height - self.radius
+        elif self.position.y > HEIGHT - self.radius:
+            self.position.y = HEIGHT - self.radius
             self.velocity.y *= -1
 
     def collision(self, other):
@@ -75,7 +76,7 @@ class Particle:
         self.position += self.velocity
 
     def show(self, screen):
-        pygame.draw.circle(
+        pygame.draw.aacircle(
             surface=screen,
             color=self.color,
             center=self.position,
@@ -85,7 +86,7 @@ class Particle:
 
 
 def main():
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT + 40))
     clock = pygame.time.Clock()
     running = True
 
@@ -95,8 +96,8 @@ def main():
     for i in range(no_of_particle - 33):
         particle.append(
             Particle(
-                random.uniform(0, WIDTH),
-                random.uniform(0, HEIGHT),
+                random.randint(0, WIDTH),
+                random.randint(0, HEIGHT),
                 mass=random.randint(11, 25),
                 width=2,
             )
@@ -122,10 +123,14 @@ def main():
         for i in range(no_of_particle):
             particle[i].show(screen)
             particle[i].update()
-            particle[i].edge_collision(screen)
+            particle[i].edge_collision()
 
             for j in range(i + 1, no_of_particle):
                 particle[i].collision(particle[j])
+
+        pygame.draw.aaline(
+            screen, (50, 50, 50), (0, HEIGHT + 1), (WIDTH + 1, HEIGHT + 1), 3
+        )
 
         pygame.display.update()
         clock.tick(FPS)
