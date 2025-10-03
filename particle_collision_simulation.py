@@ -72,6 +72,9 @@ class Particle:
             self.velocity += (2 * other.mass) * num / den
             other.velocity += (2 * self.mass) * -num / den
 
+            return True
+        return False
+
     def update(self):
         self.position += self.velocity
 
@@ -86,32 +89,37 @@ class Particle:
 
 
 def main():
+    pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT + 40))
     clock = pygame.time.Clock()
+    font = pygame.font.SysFont("Arial", 20)
     running = True
 
     particle = []
-    no_of_particle = 99
+    no_of_particle = 400
 
-    for i in range(no_of_particle - 33):
-        particle.append(
-            Particle(
-                random.randint(0, WIDTH),
-                random.randint(0, HEIGHT),
-                mass=random.randint(11, 25),
-                width=2,
-            )
-        )
+    # for i in range(no_of_particle - 20):
+    #     particle.append(
+    #         Particle(
+    #             random.randint(0, WIDTH),
+    #             random.randint(0, HEIGHT),
+    #             mass=random.randint(11, 25),
+    #             width=2,
+    #         )
+    #     )
 
-    for i in range(no_of_particle - 33):
+    for i in range(no_of_particle):
         particle.append(
             Particle(
                 random.uniform(0, WIDTH),
                 random.uniform(0, HEIGHT),
-                mass=random.randint(2, 4),
+                mass=1,
                 width=0,
+                velocity=6,
             )
         )
+
+    no_of_collisions = 0
 
     while running:
         for event in pygame.event.get():
@@ -126,11 +134,19 @@ def main():
             particle[i].edge_collision()
 
             for j in range(i + 1, no_of_particle):
-                particle[i].collision(particle[j])
+                if particle[i].collision(particle[j]):
+                    no_of_collisions += 1
 
         pygame.draw.aaline(
             screen, (50, 50, 50), (0, HEIGHT + 1), (WIDTH + 1, HEIGHT + 1), 3
         )
+
+        text = font.render(
+            f"Total no of collisions: {no_of_collisions}",
+            True,
+            (225, 225, 225),
+        )
+        screen.blit(text, (20, HEIGHT + 7))
 
         pygame.display.update()
         clock.tick(FPS)
