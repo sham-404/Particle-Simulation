@@ -96,24 +96,24 @@ def main():
     running = True
 
     particle = []
-    no_of_particle = 400
+    no_of_particle = 150
 
-    # for i in range(no_of_particle - 20):
-    #     particle.append(
-    #         Particle(
-    #             random.randint(0, WIDTH),
-    #             random.randint(0, HEIGHT),
-    #             mass=random.randint(11, 25),
-    #             width=2,
-    #         )
-    #     )
+    for i in range(no_of_particle - 75):
+         particle.append(
+             Particle(
+                 random.randint(0, WIDTH),
+                 random.randint(0, HEIGHT),
+                 mass=random.randint(11, 20),
+                 width=2,
+             )
+         )
 
-    for i in range(no_of_particle):
+    for i in range(75):
         particle.append(
             Particle(
-                random.uniform(0, WIDTH),
-                random.uniform(0, HEIGHT),
-                mass=1,
+                random.randint(0, WIDTH),
+                random.randint(0, HEIGHT),
+                mass=random.randint(2, 4),
                 width=0,
                 velocity=6,
             )
