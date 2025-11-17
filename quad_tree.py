@@ -1,3 +1,6 @@
+from random import randint
+
+
 class Circle:
     def __init__(self, x, y, r=1) -> None:
         self.x = x
