@@ -1,30 +1,29 @@
-from random import randint
-
-
 class Circle:
     def __init__(self, x, y, r=1) -> None:
         self.x = x
-        self.y = y 
-        self.radius = r 
+        self.y = y
+        self.radius = r
+
 
 class Cell:
     def __init__(self, x, y, w, h) -> None:
-        self.x = x 
-        self.y = y 
-        self.width = w 
-        self.height = h 
+        self.x = x
+        self.y = y
+        self.width = w
+        self.height = h
 
-    def contains(self, obj: Circle):
+    def contains(self, obj):
         return (
-            self.x < obj.x and self.x + self.width > obj.x and
-            self.y < obj.y and self.y + self.height > obj.y
+            self.x <= obj.x < self.x + self.width
+            and self.y <= obj.y < self.y + self.height
         )
+
 
 class QuadTree:
     def __init__(self, cell: Cell, capacity) -> None:
-        self.cell = cell 
-        self.capacity = capacity 
-        self.divided = False 
+        self.cell = cell
+        self.capacity = capacity
+        self.divided = False
         self.points = []
         self.nw = self.ne = self.sw = self.se = None
 
@@ -37,7 +36,11 @@ class QuadTree:
             return True
 
         if not self.divided:
-            self.subdivide() 
+            self.subdivide()
+
+            for point in self.points:
+                self.insert(point)
+            self.points.clear()
 
         for child in (self.nw, self.ne, self.sw, self.se):
             if child is not None and child.insert(circle):
@@ -47,7 +50,7 @@ class QuadTree:
     def subdivide(self):
         w = self.cell.width / 2
         h = self.cell.height / 2
-        x = self.cell.x 
+        x = self.cell.x
         y = self.cell.y
 
         self.nw = QuadTree(Cell(x, y, w, h), self.capacity)
@@ -56,4 +59,3 @@ class QuadTree:
         self.se = QuadTree(Cell(x + w, y + h, w, h), self.capacity)
 
         self.divided = True
-

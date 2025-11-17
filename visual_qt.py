@@ -1,17 +1,19 @@
 from quad_tree import *
-import pygame 
+import pygame
+
 pygame.init()
 
 
 def draw_qt(screen, qt):
-    """
     pygame.draw.rect(
-        screen, 
-        (200, 200, 200), 
-        pygame.Rect(qt.cell.x, qt.cell.y, qt.cell.width, qt.cell.height), 
-        1
+        screen,
+        (200, 200, 200),
+        pygame.Rect(qt.cell.x, qt.cell.y, qt.cell.width, qt.cell.height),
+        1,
     )
+
     """
+
     if qt.divided:
         pygame.draw.line(
             screen,
@@ -27,9 +29,12 @@ def draw_qt(screen, qt):
             (qt.cell.x + qt.cell.width, qt.cell.y + qt.cell.height / 2),
         )
 
+    """
+
     for child in (qt.nw, qt.ne, qt.sw, qt.se):
         if child is not None:
             draw_qt(screen, child)
+
 
 def draw_points(screen, points):
     for x, y in points:
@@ -46,7 +51,7 @@ def main():
     running = True
     clock = pygame.time.Clock()
     qt = QuadTree(Cell(0, 0, W, H), 4)
-    cooldown = 50
+    cooldown = 100
     last_clicked = 0
     points = []
 
@@ -74,6 +79,7 @@ def main():
         pygame.display.flip()
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
