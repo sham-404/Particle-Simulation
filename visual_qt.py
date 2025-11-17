@@ -2,17 +2,6 @@ from quad_tree import *
 import pygame 
 pygame.init()
 
-W = 600
-H = 600
-FPS = 60
-screen = pygame.display.set_mode((W, H))
-pygame.display.set_caption("Quad Tree Visualization")
-running = True
-clock = pygame.time.Clock()
-qt = QuadTree(Cell(0, 0, W, H), 4)
-cooldown = 50
-last_clicked = 0
-points = []
 
 def draw_qt(screen, qt):
     """
@@ -46,27 +35,45 @@ def draw_points(screen, points):
     for x, y in points:
         pygame.draw.circle(screen, (200, 0, 0), (x, y), 2)
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
 
-    now = pygame.time.get_ticks()
+def main():
 
-    pressed, _, _ = pygame.mouse.get_pressed()
-    if pressed and now - last_clicked >= cooldown:
-        last_clicked = now
-        x, y = pygame.mouse.get_pos()
-        qt.insert(Circle(x, y))
-        points.append((x, y))
+    W = 600
+    H = 600
+    FPS = 60
+    screen = pygame.display.set_mode((W, H))
+    pygame.display.set_caption("Quad Tree Visualization")
+    running = True
+    clock = pygame.time.Clock()
+    qt = QuadTree(Cell(0, 0, W, H), 4)
+    cooldown = 50
+    last_clicked = 0
+    points = []
 
-    screen.fill((10, 10, 10))
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    if points:
-        draw_points(screen, points)
+        now = pygame.time.get_ticks()
 
-    draw_qt(screen, qt)
-    clock.tick(FPS)
-    pygame.display.flip()
+        pressed, _, _ = pygame.mouse.get_pressed()
+        if pressed and now - last_clicked >= cooldown:
+            last_clicked = now
+            x, y = pygame.mouse.get_pos()
+            qt.insert(Circle(x, y))
+            points.append((x, y))
 
-pygame.quit()
+        screen.fill((10, 10, 10))
+
+        if points:
+            draw_points(screen, points)
+
+        draw_qt(screen, qt)
+        clock.tick(FPS)
+        pygame.display.flip()
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
