@@ -15,7 +15,12 @@ last_clicked = 0
 points = []
 
 def draw_qt(screen, qt):
-    pygame.draw.rect(screen, (200, 200, 200), pygame.Rect(qt.cell.x, qt.cell.y, qt.cell.width, qt.cell.height), 1)
+    pygame.draw.rect(
+        screen, 
+        (200, 200, 200), 
+        pygame.Rect(qt.cell.x, qt.cell.y, qt.cell.width, qt.cell.height), 
+        1
+    )
 
     for child in (qt.nw, qt.ne, qt.sw, qt.se):
         if child is not None:
