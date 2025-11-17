@@ -1,4 +1,3 @@
-from random import randint
 from quad_tree import *
 import pygame 
 pygame.init()
@@ -11,6 +10,8 @@ pygame.display.set_caption("Quad Tree Visualization")
 running = True
 clock = pygame.time.Clock()
 qt = QuadTree(Cell(0, 0, W, H), 4)
+cooldown = 50
+last_clicked = 0
 points = []
 
 def draw_qt(screen, qt):
@@ -29,8 +30,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    now = pygame.time.get_ticks()
+
     pressed, _, _ = pygame.mouse.get_pressed()
-    if pressed:
+    if pressed and now - last_clicked >= cooldown:
+        last_clicked = now
         x, y = pygame.mouse.get_pos()
         qt.insert(Circle(x, y))
         points.append((x, y))
@@ -43,6 +47,5 @@ while running:
     draw_qt(screen, qt)
     clock.tick(FPS)
     pygame.display.flip()
-
 
 pygame.quit()
