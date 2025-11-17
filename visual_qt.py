@@ -15,12 +15,28 @@ last_clicked = 0
 points = []
 
 def draw_qt(screen, qt):
+    """
     pygame.draw.rect(
         screen, 
         (200, 200, 200), 
         pygame.Rect(qt.cell.x, qt.cell.y, qt.cell.width, qt.cell.height), 
         1
     )
+    """
+    if qt.divided:
+        pygame.draw.line(
+            screen,
+            (200, 200, 200),
+            (qt.cell.x + qt.cell.width / 2, qt.cell.y),
+            (qt.cell.x + qt.cell.width / 2, qt.cell.y + qt.cell.height),
+        )
+
+        pygame.draw.line(
+            screen,
+            (200, 200, 200),
+            (qt.cell.x, qt.cell.y + qt.cell.height / 2),
+            (qt.cell.x + qt.cell.width, qt.cell.y + qt.cell.height / 2),
+        )
 
     for child in (qt.nw, qt.ne, qt.sw, qt.se):
         if child is not None:
