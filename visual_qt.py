@@ -40,19 +40,22 @@ def draw_points(screen, points):
         pygame.draw.circle(screen, (200, 0, 0), (x, y), 2)
 
 
-def main():
+def get_points(qt):
+    if not qt.divided:
+        return [(p.x, p.y) for p in qt.points]
 
-    W = 600
-    H = 600
+    return get_points(qt.nw) + get_points(qt.ne) + get_points(qt.sw) + get_points(qt.se)
+
+
+def visualize(qt):
     FPS = 60
-    screen = pygame.display.set_mode((W, H))
+    screen = pygame.display.set_mode((qt.cell.width, qt.cell.height))
     pygame.display.set_caption("Quad Tree Visualization")
     running = True
     clock = pygame.time.Clock()
-    qt = QuadTree(Cell(0, 0, W, H), 4)
     cooldown = 100
     last_clicked = 0
-    points = []
+    points = qt.get_points()
 
     while running:
         for event in pygame.event.get():
@@ -81,4 +84,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    visualize(QuadTree(Cell(0, 0, 512, 512), 4))
