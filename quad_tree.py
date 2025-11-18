@@ -28,15 +28,26 @@ class QuadTree:
         self.nw = self.ne = self.sw = self.se = None
 
     def get_points(self):
-        if not self.divided:
-            return [(p.x, p.y) for p in self.points]
+        points = []
+        stack: list[QuadTree] = [self]
 
-        return (
-            self.get_points()
-            + self.get_points()
-            + self.get_points()
-            + self.get_points()
-        )
+        while stack:
+            node = stack.pop()
+
+            if not node.divided:
+                for p in node.points:
+                    points.append((p.x, p.y))
+            else:
+                if node.se:
+                    stack.append(node.se)
+                if node.sw:
+                    stack.append(node.sw)
+                if node.ne:
+                    stack.append(node.ne)
+                if node.nw:
+                    stack.append(node.nw)
+
+        return points
 
     def insert(self, circle):
         if not self.cell.contains(circle):
