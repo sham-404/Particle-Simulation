@@ -40,13 +40,6 @@ def draw_points(screen, points):
         pygame.draw.circle(screen, (200, 0, 0), (x, y), 2)
 
 
-def get_points(qt):
-    if not qt.divided:
-        return [(p.x, p.y) for p in qt.points]
-
-    return get_points(qt.nw) + get_points(qt.ne) + get_points(qt.sw) + get_points(qt.se)
-
-
 def visualize(qt):
     FPS = 60
     screen = pygame.display.set_mode((qt.cell.width, qt.cell.height))
