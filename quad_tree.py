@@ -27,6 +27,17 @@ class QuadTree:
         self.points = []
         self.nw = self.ne = self.sw = self.se = None
 
+    def get_points(self):
+        if not self.divided:
+            return [(p.x, p.y) for p in self.points]
+
+        return (
+            self.get_points()
+            + self.get_points()
+            + self.get_points()
+            + self.get_points()
+        )
+
     def insert(self, circle):
         if not self.cell.contains(circle):
             return False
