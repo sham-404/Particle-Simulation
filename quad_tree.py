@@ -31,16 +31,17 @@ class QuadTree:
         if not self.cell.contains(circle):
             return False
 
-        if len(self.points) < self.capacity:
-            self.points.append(circle)
-            return True
-
         if not self.divided:
-            self.subdivide()
+            if len(self.points) < self.capacity:
+                self.points.append(circle)
+                return True
 
-            for point in self.points:
+            self.subdivide()
+            old_points = self.points.copy()
+
+            for point in old_points:
                 self.insert(point)
-            self.points.clear()
+            self.points = []
 
         for child in (self.nw, self.ne, self.sw, self.se):
             if child is not None and child.insert(circle):

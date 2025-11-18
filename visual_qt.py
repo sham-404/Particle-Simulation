@@ -5,6 +5,7 @@ pygame.init()
 
 
 def draw_qt(screen, qt):
+    """
     pygame.draw.rect(
         screen,
         (200, 200, 200),
@@ -28,8 +29,6 @@ def draw_qt(screen, qt):
             (qt.cell.x, qt.cell.y + qt.cell.height / 2),
             (qt.cell.x + qt.cell.width, qt.cell.y + qt.cell.height / 2),
         )
-
-    """
 
     for child in (qt.nw, qt.ne, qt.sw, qt.se):
         if child is not None:
