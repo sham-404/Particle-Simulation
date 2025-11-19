@@ -1,3 +1,7 @@
+# I have used pygame-ce, so if you want to use it on normal pygame,
+# change the anti aliased circle (pygame.draw.aacircle()) to
+# normal circle (pygame.draw.circle()) in the show() of Particle class
+
 import random, math, pygame
 
 
