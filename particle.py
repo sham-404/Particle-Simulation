@@ -8,7 +8,8 @@ import random, math, pygame
 class GVar:
     WIDTH = 1200
     HEIGHT = 550
-    FPS = 30
+    FPS = 60
+    DT = 1 / FPS
 
 
 class Particle:
@@ -34,7 +35,7 @@ class Particle:
         )
 
         if velocity is None:
-            velocity = random.uniform(2, 6)
+            velocity = random.uniform(100, 200)  # Pixels per second
 
         self.velocity *= velocity
         self.acceleration = pygame.math.Vector2(0, 0)
@@ -78,7 +79,7 @@ class Particle:
         return False
 
     def update(self):
-        self.position += self.velocity
+        self.position += self.velocity * GVar.DT
 
     def show(self, screen):
         pygame.draw.aacircle(

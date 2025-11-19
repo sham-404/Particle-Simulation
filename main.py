@@ -2,7 +2,7 @@
 # change the anti aliased circle (pygame.draw.aacircle()) to
 # normal circle (pygame.draw.circle()) in the show() of Particle class
 
-import pygame, random
+import pygame, random, time
 from particle import Particle, GVar
 
 
@@ -15,8 +15,9 @@ def main():
 
     particle = []
     no_of_particle = 150
+    no_of_small_particles = 100
 
-    for i in range(no_of_particle - 75):
+    for i in range(no_of_particle - no_of_small_particles):
         particle.append(
             Particle(
                 random.randint(0, GVar.WIDTH),
@@ -26,34 +27,51 @@ def main():
             )
         )
 
-    for i in range(75):
+    for i in range(no_of_small_particles):
         particle.append(
             Particle(
                 random.randint(0, GVar.WIDTH),
                 random.randint(0, GVar.HEIGHT),
                 mass=random.randint(2, 4),
                 width=0,
-                velocity=6,
+                velocity=300,
             )
         )
 
     no_of_collisions = 0
+    time_accumulated = 0
+    current_time = time.perf_counter()
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
+        new_time = time.perf_counter()
+        frame_time = new_time - current_time
+        current_time = new_time
+
+        # Accounting for lag
+        if frame_time > 0.1:  # Max lag allowed in 100ms
+            frame_time = 0.1
+
+        time_accumulated += frame_time
+
+        while time_accumulated > GVar.DT:
+            for i in range(no_of_particle):
+                particle[i].update()
+                particle[i].edge_collision()
+
+                for j in range(i + 1, no_of_particle):
+                    if particle[i].collision(particle[j]):
+                        no_of_collisions += 1
+
+            time_accumulated -= GVar.DT
+
         screen.fill((0, 0, 0))
 
-        for i in range(no_of_particle):
-            particle[i].show(screen)
-            particle[i].update()
-            particle[i].edge_collision()
-
-            for j in range(i + 1, no_of_particle):
-                if particle[i].collision(particle[j]):
-                    no_of_collisions += 1
+        for p in particle:
+            p.show(screen)
 
         pygame.draw.aaline(
             screen,
@@ -71,7 +89,7 @@ def main():
         screen.blit(text, (20, GVar.HEIGHT + 7))
 
         pygame.display.update()
-        clock.tick(GVar.FPS)
+        clock.tick()
 
     pygame.quit()
 
