@@ -88,6 +88,13 @@ def main():
         )
         screen.blit(text, (20, GVar.HEIGHT + 7))
 
+        text = font.render(
+            f"FPS: {clock.get_fps(): .3f}",
+            True,
+            (225, 225, 225),
+        )
+        screen.blit(text, (GVar.WIDTH - 150, GVar.HEIGHT + 7))
+
         pygame.display.update()
         clock.tick()
 
