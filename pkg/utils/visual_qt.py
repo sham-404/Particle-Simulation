@@ -1,4 +1,4 @@
-from quad_tree import *
+from pkg.core.quad_tree import *
 import pygame
 
 pygame.init()

@@ -3,13 +3,7 @@
 # normal circle (pygame.draw.circle()) in the show() of Particle class
 
 import random, math, pygame
-
-
-class GVar:
-    WIDTH = 1200
-    HEIGHT = 550
-    FPS = 60
-    DT = 1 / FPS
+from pkg.core.config import GVar
 
 
 class Particle:

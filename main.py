@@ -3,7 +3,8 @@
 # normal circle (pygame.draw.circle()) in the show() of Particle class
 
 import pygame, random, time
-from particle import Particle, GVar
+from pkg.core.particle import Particle
+from pkg.core.config import GVar
 
 
 def main():
