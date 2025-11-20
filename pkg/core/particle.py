@@ -24,6 +24,7 @@ class Particle:
             )
 
         self.position = pygame.math.Vector2(x, y)
+        self.prev_position = pygame.math.Vector2(x, y)
         self.velocity = pygame.math.Vector2(1, 0).rotate_rad(
             random.uniform(0, math.tau)
         )
@@ -73,13 +74,17 @@ class Particle:
         return False
 
     def update(self):
+        self.prev_position = self.position.copy()
         self.position += self.velocity * GVar.DT
 
-    def show(self, screen):
+    def show(self, screen, alpha=1):
+
+        interpolated_position = self.position * alpha + self.prev_position * (1 - alpha)
+
         pygame.draw.aacircle(
             surface=screen,
             color=self.color,
-            center=self.position,
+            center=interpolated_position,
             radius=self.radius,
             width=self.width,
         )

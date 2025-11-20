@@ -69,10 +69,12 @@ def main():
 
             time_accumulated -= GVar.DT
 
+        alpha = time_accumulated / GVar.DT
+
         screen.fill((0, 0, 0))
 
         for p in particle:
-            p.show(screen)
+            p.show(screen, alpha)
 
         pygame.draw.aaline(
             screen,
