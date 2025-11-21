@@ -1,6 +1,7 @@
 # I have used pygame-ce, so if you want to use it on normal pygame,
 # change the anti aliased circle (pygame.draw.aacircle()) to
 # normal circle (pygame.draw.circle()) in the show() of Particle class
+# which is located in pkg/core/particle.py
 
 import pygame, random, time
 from pkg.core.particle import Particle
@@ -10,15 +11,16 @@ from pkg.core.config import GVar
 def main():
     pygame.init()
     screen = pygame.display.set_mode((GVar.WIDTH, GVar.HEIGHT + 40))
+    pygame.display.set_caption("Elastic Collision Simulation")
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 20)
     running = True
 
     particle = []
-    no_of_particle = 150
-    no_of_small_particles = 100
+    no_of_big_particle = 50
+    no_of_small_particles = 125
 
-    for i in range(no_of_particle - no_of_small_particles):
+    for i in range(no_of_big_particle):
         particle.append(
             Particle(
                 random.randint(0, GVar.WIDTH),
@@ -58,18 +60,21 @@ def main():
 
         time_accumulated += frame_time
 
+        # Updating only once in dt (dt = 1 / FPS) regardless of system speed
+        # ie, running at a constant FPS regardless of external factors
+        # for accurate physics rendering
         while time_accumulated > GVar.DT:
-            for i in range(no_of_particle):
+            for i in range(no_of_big_particle + no_of_small_particles):
                 particle[i].update()
                 particle[i].edge_collision()
 
-                for j in range(i + 1, no_of_particle):
+                for j in range(i + 1, no_of_big_particle + no_of_small_particles):
                     if particle[i].collision(particle[j]):
                         no_of_collisions += 1
 
             time_accumulated -= GVar.DT
 
-        alpha = time_accumulated / GVar.DT
+        alpha = time_accumulated / GVar.DT  # To find interpolated position
 
         screen.fill((0, 0, 0))
 
