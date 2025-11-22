@@ -27,6 +27,14 @@ class QuadTree:
         self.points = []
         self.nw = self.ne = self.sw = self.se = None
 
+    def overlaps(self, cell):
+        return (
+            self.cell.x < cell.x + cell.width
+            and self.cell.x + self.cell.width > cell.x
+            and self.cell.y < cell.y + cell.height
+            and self.cell.y + self.cell.height > cell.y
+        )
+
     def get_points(self):
         points = []
         stack: list[QuadTree] = [self]
@@ -82,3 +90,6 @@ class QuadTree:
         self.se = QuadTree(Cell(x + w, y + h, w, h), self.capacity)
 
         self.divided = True
+
+    def items_in(self, cell):
+        pass
