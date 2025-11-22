@@ -26,6 +26,7 @@ class Cell:
             and self.y + self.height > cell.y
         )
 
+
 class QuadTree:
     def __init__(self, cell: Cell, capacity) -> None:
         self.cell = cell
@@ -33,7 +34,6 @@ class QuadTree:
         self.divided = False
         self.points = []
         self.nw = self.ne = self.sw = self.se = None
-
 
     def get_points(self):
         points = []
@@ -56,6 +56,20 @@ class QuadTree:
                     stack.append(node.nw)
 
         return points
+
+    def get_items(self):
+        items = []
+        stack: list[QuadTree] = [self]
+
+        while stack:
+            node = stack.pop()
+
+            if node.divided:
+                stack.extend([c for c in (node.nw, node.ne, node.sw, node.se) if c])
+            else:
+                items.extend(node.points)
+
+        return items
 
     def insert(self, circle):
         if not self.cell.contains(circle):
@@ -91,6 +105,21 @@ class QuadTree:
 
         self.divided = True
 
-    def items_in(self, cell):
-        if self.overlaps
-        pass
+    def items_in(self, cell, found=None):
+        if found is None:
+            found = []
+
+        if not self.cell.overlaps(cell):
+            return found
+
+        if not self.divided:
+            for p in self.points:
+                if cell.contains(p):
+                    found.append(p)
+            return found
+
+        for child in (self.nw, self.ne, self.sw, self.se):
+            if child:
+                child.items_in(cell, found)
+
+        return found

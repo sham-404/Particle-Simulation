@@ -63,6 +63,10 @@ def visualize(qt):
             x, y = pygame.mouse.get_pos()
             qt.insert(Circle(x, y))
             points.append((x, y))
+            print(
+                len(qt.items_in(Cell(256, 256, qt.cell.width / 2, qt.cell.height / 2)))
+            )
+            print(f"items: {len(qt.get_items())}")
 
         screen.fill((10, 10, 10))
 
