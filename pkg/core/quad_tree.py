@@ -18,6 +18,13 @@ class Cell:
             and self.y <= obj.y < self.y + self.height
         )
 
+    def overlaps(self, cell):
+        return (
+            self.x < cell.x + cell.width
+            and self.x + self.width > cell.x
+            and self.y < cell.y + cell.height
+            and self.y + self.height > cell.y
+        )
 
 class QuadTree:
     def __init__(self, cell: Cell, capacity) -> None:
@@ -27,13 +34,6 @@ class QuadTree:
         self.points = []
         self.nw = self.ne = self.sw = self.se = None
 
-    def overlaps(self, cell):
-        return (
-            self.cell.x < cell.x + cell.width
-            and self.cell.x + self.cell.width > cell.x
-            and self.cell.y < cell.y + cell.height
-            and self.cell.y + self.cell.height > cell.y
-        )
 
     def get_points(self):
         points = []
@@ -92,4 +92,5 @@ class QuadTree:
         self.divided = True
 
     def items_in(self, cell):
+        if self.overlaps
         pass
