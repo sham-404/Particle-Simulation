@@ -6,6 +6,8 @@
 import pygame, random, time
 from pkg.core.particle import Particle
 from pkg.core.config import GVar
+from pkg.core.quad_tree import *
+from pkg.utils.visual_qt import draw_qt
 
 
 def main():
@@ -22,24 +24,31 @@ def main():
 
     for i in range(no_of_big_particle):
         particle.append(
-            Particle(
-                random.randint(0, GVar.WIDTH),
-                random.randint(0, GVar.HEIGHT),
-                mass=random.randint(11, 20),
-                width=2,
+            Point(
+                obj=Particle(
+                    random.randint(0, GVar.WIDTH),
+                    random.randint(0, GVar.HEIGHT),
+                    mass=random.randint(11, 20),
+                    width=2,
+                )
             )
         )
 
     for i in range(no_of_small_particles):
         particle.append(
-            Particle(
-                random.randint(0, GVar.WIDTH),
-                random.randint(0, GVar.HEIGHT),
-                mass=random.randint(2, 4),
-                width=0,
-                velocity=300,
+            Point(
+                obj=Particle(
+                    random.randint(0, GVar.WIDTH),
+                    random.randint(0, GVar.HEIGHT),
+                    mass=random.randint(2, 4),
+                    width=0,
+                    velocity=300,
+                )
             )
         )
+
+    qt = QuadTree(Cell(0, 0, GVar.WIDTH, GVar.HEIGHT), 4)
+    check_cell = Cell(0, 0, 40, 40)
 
     no_of_collisions = 0
     time_accumulated = 0
@@ -64,22 +73,26 @@ def main():
         # ie, running at a constant FPS regardless of external factors
         # for accurate physics rendering
         while time_accumulated > GVar.DT:
-            for i in range(no_of_big_particle + no_of_small_particles):
-                particle[i].update()
-                particle[i].edge_collision()
+            for p in particle:
+                p.data.update()
+                p.data.edge_collision()
 
-                for j in range(i + 1, no_of_big_particle + no_of_small_particles):
-                    if particle[i].collision(particle[j]):
+                print(qt.items_in(check_cell))
+
+                for near_point in qt.items_in(check_cell):
+                    if p.data.collision(near_point.data):
                         no_of_collisions += 1
 
             time_accumulated -= GVar.DT
+            for p in particle:
+                qt.insert(p)
 
         alpha = time_accumulated / GVar.DT  # To find interpolated position
 
         screen.fill((0, 0, 0))
 
         for p in particle:
-            p.show(screen, alpha)
+            p.data.show(screen, alpha)
 
         pygame.draw.aaline(
             screen,

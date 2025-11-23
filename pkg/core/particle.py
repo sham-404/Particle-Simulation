@@ -23,6 +23,8 @@ class Particle:
                 random.randint(50, 255),
             )
 
+        self.x = x
+        self.y = y
         self.position = pygame.math.Vector2(x, y)
         self.prev_position = pygame.math.Vector2(x, y)
         self.velocity = pygame.math.Vector2(1, 0).rotate_rad(

@@ -1,8 +1,13 @@
-class Circle:
-    def __init__(self, x, y, r=1) -> None:
-        self.x = x
-        self.y = y
-        self.radius = r
+class Point:
+    def __init__(self, x=0, y=0, obj=None) -> None:
+        if obj is None:
+            self.x = x
+            self.y = y
+
+        else:
+            self.x = obj.x
+            self.y = obj.y
+            self.data = obj
 
 
 class Cell:
@@ -12,10 +17,10 @@ class Cell:
         self.width = w
         self.height = h
 
-    def contains(self, obj):
+    def contains(self, point):
         return (
-            self.x <= obj.x < self.x + self.width
-            and self.y <= obj.y < self.y + self.height
+            self.x <= point.x < self.x + self.width
+            and self.y <= point.y < self.y + self.height
         )
 
     def overlaps(self, cell):
@@ -34,6 +39,9 @@ class QuadTree:
         self.divided = False
         self.points = []
         self.nw = self.ne = self.sw = self.se = None
+
+    def clear(self):
+        self = QuadTree(self.cell, self.capacity)
 
     def get_points(self):
         points = []
@@ -71,13 +79,13 @@ class QuadTree:
 
         return items
 
-    def insert(self, circle):
-        if not self.cell.contains(circle):
+    def insert(self, point):
+        if not self.cell.contains(point):
             return False
 
         if not self.divided:
             if len(self.points) < self.capacity:
-                self.points.append(circle)
+                self.points.append(point)
                 return True
 
             self.subdivide()
@@ -88,7 +96,7 @@ class QuadTree:
             self.points = []
 
         for child in (self.nw, self.ne, self.sw, self.se):
-            if child is not None and child.insert(circle):
+            if child is not None and child.insert(point):
                 return True
         return False
 

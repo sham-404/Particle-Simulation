@@ -69,7 +69,7 @@ def visualize(qt):
         if pressed_l and now - last_clicked >= cooldown:
             last_clicked = now
             x, y = pygame.mouse.get_pos()
-            qt.insert(Circle(x, y))
+            qt.insert(Point(x, y))
             points.append((x, y))
 
         elif pressed_r and now - last_clicked >= cooldown:
