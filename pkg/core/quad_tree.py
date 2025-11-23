@@ -102,6 +102,7 @@ class QuadTree:
 
             self.subdivide()
             old_points = self.points.copy()
+            self.insert(point)
 
             for point in old_points:
                 self.insert(point)

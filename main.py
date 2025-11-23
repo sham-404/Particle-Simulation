@@ -22,19 +22,19 @@ def main():
     no_of_big_particle = 50
     no_of_small_particles = 300
 
-    for i in range(no_of_big_particle):
+    for _ in range(no_of_big_particle):
         particle.append(
             Point(
                 obj=Particle(
                     random.randint(0, GVar.WIDTH),
                     random.randint(0, GVar.HEIGHT),
                     mass=random.randint(50, 200),
-                    width=2,
+                    width=1,
                 )
             )
         )
 
-    for i in range(no_of_small_particles):
+    for _ in range(no_of_small_particles):
         particle.append(
             Point(
                 obj=Particle(
@@ -42,13 +42,14 @@ def main():
                     random.randint(0, GVar.HEIGHT),
                     mass=random.randint(7, 12),
                     width=0,
-                    velocity=300,
+                    velocity=100,
                 )
             )
         )
 
     qt = QuadTree(Cell(0, 0, GVar.WIDTH, GVar.HEIGHT), 4)
-    check_cell = Cell(0, 0, 30, 30)
+    max_radius_possible = 40
+    check_cell = Cell(0, 0, max_radius_possible * 2, max_radius_possible * 2)
 
     no_of_collisions = 0
     time_accumulated = 0
@@ -76,8 +77,8 @@ def main():
             for point in particle:
                 point.data.update()
                 point.data.edge_collision()
-                check_cell.x = point.x - 5
-                check_cell.y = point.y - 5
+                check_cell.x = point.x - max_radius_possible
+                check_cell.y = point.y - max_radius_possible
 
                 for near_point in qt.items_in(check_cell):
                     if point.data.collision(near_point.data):
