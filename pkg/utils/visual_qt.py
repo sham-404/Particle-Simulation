@@ -1,3 +1,4 @@
+from pkg.core.quad_tree import QuadTree
 from pkg.core.quad_tree import *
 import pygame
 
@@ -88,6 +89,10 @@ def visualize(qt):
 
         draw_cell(screen, check_cell)
         draw_qt(screen, qt)
+        if len(points) > 20:
+            print("hi")
+            points.clear()
+            qt = QuadTree(qt.cell, qt.capacity)
         clock.tick(FPS)
         pygame.display.flip()
 

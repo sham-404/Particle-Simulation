@@ -20,7 +20,7 @@ def main():
 
     particle = []
     no_of_big_particle = 50
-    no_of_small_particles = 125
+    no_of_small_particles = 300
 
     for i in range(no_of_big_particle):
         particle.append(
@@ -28,7 +28,7 @@ def main():
                 obj=Particle(
                     random.randint(0, GVar.WIDTH),
                     random.randint(0, GVar.HEIGHT),
-                    mass=random.randint(11, 20),
+                    mass=random.randint(50, 200),
                     width=2,
                 )
             )
@@ -40,7 +40,7 @@ def main():
                 obj=Particle(
                     random.randint(0, GVar.WIDTH),
                     random.randint(0, GVar.HEIGHT),
-                    mass=random.randint(2, 4),
+                    mass=random.randint(7, 12),
                     width=0,
                     velocity=300,
                 )
@@ -48,7 +48,7 @@ def main():
         )
 
     qt = QuadTree(Cell(0, 0, GVar.WIDTH, GVar.HEIGHT), 4)
-    check_cell = Cell(0, 0, 40, 40)
+    check_cell = Cell(0, 0, 30, 30)
 
     no_of_collisions = 0
     time_accumulated = 0
@@ -73,19 +73,21 @@ def main():
         # ie, running at a constant FPS regardless of external factors
         # for accurate physics rendering
         while time_accumulated > GVar.DT:
-            for p in particle:
-                p.data.update()
-                p.data.edge_collision()
-
-                print(qt.items_in(check_cell))
+            for point in particle:
+                point.data.update()
+                point.data.edge_collision()
+                check_cell.x = point.x - 5
+                check_cell.y = point.y - 5
 
                 for near_point in qt.items_in(check_cell):
-                    if p.data.collision(near_point.data):
+                    if point.data.collision(near_point.data):
                         no_of_collisions += 1
 
             time_accumulated -= GVar.DT
-            for p in particle:
-                qt.insert(p)
+
+        qt.clear()
+        for p in particle:
+            qt.insert(p)
 
         alpha = time_accumulated / GVar.DT  # To find interpolated position
 

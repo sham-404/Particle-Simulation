@@ -1,13 +1,23 @@
 class Point:
     def __init__(self, x=0, y=0, obj=None) -> None:
         if obj is None:
-            self.x = x
-            self.y = y
-
+            self._x = x
+            self._y = y
+            self.data = None
         else:
-            self.x = obj.x
-            self.y = obj.y
             self.data = obj
+
+    @property
+    def x(self):
+        if self.data:
+            return self.data.position.x
+        return self._x
+
+    @property
+    def y(self):
+        if self.data:
+            return self.data.position.y
+        return self._y
 
 
 class Cell:
@@ -41,7 +51,9 @@ class QuadTree:
         self.nw = self.ne = self.sw = self.se = None
 
     def clear(self):
-        self = QuadTree(self.cell, self.capacity)
+        self.divided = False
+        self.points = []
+        self.ne = self.nw = self.se = self.sw = None
 
     def get_points(self):
         points = []

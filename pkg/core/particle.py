@@ -14,7 +14,7 @@ class Particle:
             mass = random.uniform(1, 10)
 
         if radius is None:
-            radius = int(math.sqrt(mass) * 5)
+            radius = int(math.sqrt(mass))
 
         if color is None:
             color = (
@@ -23,8 +23,6 @@ class Particle:
                 random.randint(50, 255),
             )
 
-        self.x = x
-        self.y = y
         self.position = pygame.math.Vector2(x, y)
         self.prev_position = pygame.math.Vector2(x, y)
         self.velocity = pygame.math.Vector2(1, 0).rotate_rad(
@@ -60,7 +58,7 @@ class Particle:
         impact = self.position - other.position
         dist = impact.length()
 
-        if impact.length() <= self.radius + other.radius:
+        if impact.length() <= self.radius + other.radius and impact.length() != 0:
             overlap = (self.radius + other.radius) - dist
             correction = impact.normalize() * (overlap / 2)
             self.position += correction
