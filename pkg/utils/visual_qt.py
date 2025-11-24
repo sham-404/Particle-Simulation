@@ -1,5 +1,6 @@
 from pkg.core.quad_tree import QuadTree
 from pkg.core.quad_tree import *
+from pkg.utils.color import Colors
 import pygame
 
 pygame.init()
@@ -7,7 +8,7 @@ pygame.init()
 
 def draw_cell(screen, cell):
     pygame.draw.rect(
-        screen, (0, 0, 225), pygame.Rect(cell.x, cell.y, cell.width, cell.height), 1
+        screen, Colors.BLUE, pygame.Rect(cell.x, cell.y, cell.width, cell.height), 1
     )
 
 
@@ -15,7 +16,7 @@ def draw_qt(screen, qt):
     """
     pygame.draw.rect(
         screen,
-        (200, 200, 200),
+        Colors.LIGHT_GRAY,
         pygame.Rect(qt.cell.x, qt.cell.y, qt.cell.width, qt.cell.height),
         1,
     )
@@ -25,14 +26,14 @@ def draw_qt(screen, qt):
     if qt.divided:
         pygame.draw.line(
             screen,
-            (200, 200, 200),
+            Colors.MEDIUM_GRAY,
             (qt.cell.x + qt.cell.width / 2, qt.cell.y),
             (qt.cell.x + qt.cell.width / 2, qt.cell.y + qt.cell.height),
         )
 
         pygame.draw.line(
             screen,
-            (200, 200, 200),
+            Colors.MEDIUM_GRAY,
             (qt.cell.x, qt.cell.y + qt.cell.height / 2),
             (qt.cell.x + qt.cell.width, qt.cell.y + qt.cell.height / 2),
         )
@@ -42,7 +43,7 @@ def draw_qt(screen, qt):
             draw_qt(screen, child)
 
 
-def draw_points(screen, points, size=2, color=(200, 0, 0)):
+def draw_points(screen, points, size=2, color=Colors.GREEN):
     for x, y in points:
         pygame.draw.circle(screen, color, (x, y), size)
 

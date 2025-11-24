@@ -4,8 +4,10 @@
 # which is located in pkg/core/particle.py
 
 import pygame, random, time
+from pkg.utils.button import Button
 from pkg.core.particle import Particle
 from pkg.core.config import GVar
+from pkg.utils.color import Colors
 from pkg.core.quad_tree import *
 from pkg.utils.visual_qt import draw_qt
 
@@ -21,6 +23,16 @@ def main():
     particle = []
     no_of_big_particle = 50
     no_of_small_particles = 150
+
+    show_qt_btn = Button(
+        x=GVar.WIDTH / 2 - 30,
+        y=GVar.HEIGHT + 7,
+        width=95,
+        height=25,
+        toggle=True,
+        text="show qt",
+    )
+    show_qt = False
 
     for _ in range(no_of_big_particle):
         particle.append(
@@ -60,6 +72,10 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+            if show_qt_btn.check_click(event):
+                show_qt = not show_qt
+
+        screen.fill((0, 0, 0))
         new_time = time.perf_counter()
         frame_time = new_time - current_time
         current_time = new_time
@@ -101,25 +117,27 @@ def main():
 
         alpha = time_accumulated / GVar.DT  # To find interpolated position
 
-        screen.fill((0, 0, 0))
+        if show_qt:
+            draw_qt(screen, qt)
 
         for p in particle:
             p.data.show(screen, alpha)
 
         pygame.draw.aaline(
             screen,
-            (50, 50, 50),
+            Colors.GRAY,
             (0, GVar.HEIGHT + 1),
             (GVar.WIDTH + 1, GVar.HEIGHT + 1),
-            3,
+            2,
         )
 
         text = font.render(
             f"Total no of collisions: {no_of_collisions}",
             True,
-            (225, 225, 225),
+            Colors.WHITE,
         )
         screen.blit(text, (20, GVar.HEIGHT + 7))
+        show_qt_btn.draw(screen)
 
         text = font.render(
             f"FPS: {clock.get_fps(): .3f}",
