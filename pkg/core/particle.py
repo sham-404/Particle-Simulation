@@ -58,19 +58,35 @@ class Particle:
         impact = self.position - other.position
         dist = impact.length()
 
-        if impact.length() <= self.radius + other.radius and impact.length() != 0:
-            overlap = (self.radius + other.radius) - dist
-            correction = impact.normalize() * (overlap / 2)
-            self.position += correction
-            other.position -= correction
+        if dist == 0:
+            return False
 
-            den = impact.length_squared() * (self.mass + other.mass)
-            num = (other.velocity - self.velocity).dot(impact) * impact
+        radius_sum = self.radius + other.radius
 
-            self.velocity += (2 * other.mass) * num / den
-            other.velocity += (2 * self.mass) * -num / den
+        if dist < radius_sum:
+            normal = impact / dist
+            overlap = radius_sum - dist
+
+            # --- Position correction ---
+            total_mass = self.mass + other.mass
+            self.position += normal * overlap * (other.mass / total_mass)
+            other.position -= normal * overlap * (self.mass / total_mass)
+
+            # --- Relative velocity ---
+            relative_velocity = self.velocity - other.velocity
+            vel_along_normal = relative_velocity.dot(normal)
+
+            # If they are already separating, skip impulse
+            if vel_along_normal > 0:
+                return True
+
+            impulse = (2 * vel_along_normal) / (self.mass + other.mass)
+
+            self.velocity -= impulse * other.mass * normal
+            other.velocity += impulse * self.mass * normal
 
             return True
+
         return False
 
     def update(self):

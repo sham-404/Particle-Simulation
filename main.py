@@ -75,7 +75,7 @@ def main():
             if show_qt_btn.check_click(event):
                 show_qt = not show_qt
 
-        screen.fill((0, 0, 0))
+        screen.fill(Colors.BLACK)
         new_time = time.perf_counter()
         frame_time = new_time - current_time
         current_time = new_time
